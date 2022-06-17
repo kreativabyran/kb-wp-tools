@@ -1,0 +1,34 @@
+# Lando
+wordpress/
+
+# IDEs
+*.sublime-workspace
+*.sublime-project
+sftp-config.json
+*.code-workspace
+.vscode/tasks.json
+.idea/
+
+# Logs
+logs
+*.log
+
+# dotenv environment variable files
+.env*
+
+# Mac files
+.DS_Store
+
+# Composer
+vendor/
+
+# ssh
+*rsa
+*.ppk
+
+# Databases
+*.sql
+*.sql.gz
+
+# Archives
+*.zip

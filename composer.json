@@ -1,0 +1,32 @@
+{
+  "name": "kreativabyran/kb-wp-tools",
+  "description": "Tools for configuring and debugging WordPress themes and plugins.",
+  "version": "1.0.0",
+  "require": {
+    "vlucas/phpdotenv": "^5.4"
+  },
+  "require-dev": {
+    "kreativabyran/kb-wpcs": "^1.0.2"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set default_standard WordPress-KB"
+    ],
+    "post-update-cmd": [
+      "vendor\\squizlabs\\php_codesniffer\\bin\\phpcs.bat --config-set default_standard WordPress-KB"
+    ]
+  },
+  "autoload": {
+    "files": [
+      "setup.php"
+    ],
+    "psr-4": {
+      "KB_WP_Tools\\": "includes/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}

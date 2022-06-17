@@ -1,0 +1,46 @@
+name: kb-wp-tools
+recipe: wordpress
+proxy:
+  pma:
+    - pma.kb-wp-tools.lndo.site
+  mailhog:
+    - mail.kb-wp-tools.lndo.site
+config:
+  webroot: wordpress
+  php: '7.4'
+excludes:
+  - wordpress
+  - "!wordpress/kb-wp-tools"
+services:
+  appserver:
+    extras:
+      - apt-get update -y
+      - apt-get install nano -y
+  pma:
+    type: phpmyadmin
+    host:
+      - database
+  mailhog:
+    type: mailhog
+    hogfrom:
+      - appserver
+
+tooling:
+  composer:
+    service: appserver
+  build:
+    description: (re)installs wordpress and soft links theme dir to project root
+    cmd:
+      # (re)install Wordpress
+      - appserver: rm -rf wordpress && mkdir wordpress
+      - appserver: wp core download --path=wordpress
+      - appserver: wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=database --path=wordpress --dbprefix=wp_
+      - appserver: wp db reset --yes --path=wordpress
+      - appserver: wp core install --url=kb-wp-tools.lndo.site --title="kb-wp-tools DEV" --admin_user=oskar --admin_password=password --admin_email=o@kre.co --path=wordpress
+      # Symlink to the source theme files
+      - appserver: cd /app/wordpress/wp-content/plugins/ && ln -snf ../../../ kb-wp-tools
+
+  phpcs-rule:
+    description: Get names of rules failing on a file
+    cmd:
+      - appserver: ./vendor/squizlabs/php_codesniffer/bin/phpcs --report=source -s
