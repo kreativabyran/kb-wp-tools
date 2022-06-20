@@ -15,6 +15,7 @@ logs
 
 # dotenv environment variable files
 .env*
+!template-files/.env*
 
 # Mac files
 .DS_Store
