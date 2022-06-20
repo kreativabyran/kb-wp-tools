@@ -49,17 +49,22 @@ class Logging {
 	/**
 	 * Log and maybe send debug message.
 	 *
-	 * @param   string $message          Message to log/send.
-	 * @param   string $folder           Name of folder log sub folder.
-	 * @param   string $file             Will be used to set filename.
-	 * @param   null|string $message_subject  Email subject.
+	 * @param   string $message                   Message to log/send.
+	 * @param   null|string $message_subject      Email subject.
+	 * @param   null|string $debug_constant       Optional name of env var that has to be true for email sending to happen.
+	 * @param   null|string $custom_debug_email   Can be set to send message to a custom email address.
 	 */
-	public static function log_and_email( string $message, string $folder = 'main', string $file = 'log', ?string $message_subject = null ):void {
-		self::log( $message, $folder, $file );
-
+	public static function email( string $message, ?string $message_subject = null, ?string $debug_constant = null, ?string $custom_debug_email = null ):void {
 		$debug_email = Env::get( 'DEBUG_EMAIL', false );
 
-		if ( $debug_email ) {
+		if (
+			$debug_email &&
+			Debug::is_debugging( $debug_constant )
+		) {
+			if ( ! empty( $custom_debug_email ) && is_email( $custom_debug_email ) ) {
+				$debug_email = $custom_debug_email;
+			}
+
 			$mail_body  = '<h3>Debug message from ' . home_url() . '</h3>';
 			$mail_body .= '<p>' . $message . '</p>';
 			$mail_body .= '<p>Server time: ' . wp_date( 'Y-m-d H:i:s' ) . '</p>';
@@ -75,5 +80,20 @@ class Logging {
 				array( 'Content-Type: text/html; charset=UTF-8' )
 			);
 		}
+	}
+
+	/**
+	 * Log and maybe send debug message.
+	 *
+	 * @param   string $message                   Message to log/send.
+	 * @param   string $folder                    Name of folder log sub folder.
+	 * @param   string $file                      Will be used to set filename.
+	 * @param   null|string $debug_constant       Optional name of env var that has to be true for logging to happen.
+	 * @param   null|string $message_subject      Email subject.
+	 * @param   null|string $custom_debug_email   Can be set to send message to a custom email address.
+	 */
+	public static function log_and_email( string $message, string $folder = 'main', string $file = 'log', ?string $debug_constant = null, ?string $message_subject = null, ?string $custom_debug_email = null ):void {
+		self::log( $message, $folder, $file, $debug_constant );
+		self::email( $message, $message_subject, $debug_constant, $custom_debug_email );
 	}
 }
