@@ -1,7 +1,7 @@
 {
   "name": "kreativabyran/kb-wp-tools",
   "description": "Tools for configuring and debugging WordPress themes and plugins.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "require": {
     "vlucas/phpdotenv": "^5.4"
   },
