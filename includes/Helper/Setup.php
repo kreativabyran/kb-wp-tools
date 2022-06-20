@@ -24,7 +24,6 @@ class Setup {
 		$class = "\KB_WP_Tools\\$class_name";
 		if ( class_exists( $class) && ! self::is_setup( $class_name ) ) {
 			call_user_func( array( $class, 'setup' ) );
-			echo $class_name  . ' was set up!<br><br><br>';
 			self::$is_setup[ $class_name ] = true;
 		}
 	}
